@@ -1,6 +1,7 @@
 package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -23,7 +24,6 @@ public class BookDaoJdbc implements BookDao {
   public long save(Book book) {
     MapSqlParameterSource parameterSource = new MapSqlParameterSource(
         Map.of(
-            "id", book.getId(),
             "name", book.getName(),
             "genre_id", book.getGenre().getId(),
             "author_id", book.getAuthor().getId()
@@ -31,7 +31,7 @@ public class BookDaoJdbc implements BookDao {
     );
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbc.update(
-        "insert into book (id, name, genre_id, author_id) values(:id, :name, :genre_id, :author_id)",
+        "insert into book (name, genre_id, author_id) values(:name, :genre_id, :author_id)",
         parameterSource,
         keyHolder
     );
@@ -40,15 +40,19 @@ public class BookDaoJdbc implements BookDao {
 
   @Override
   public Book findById(long id) {
-    return jdbc.queryForObject(
-        "select b.id, b.name, g.id, g.name, a.id, a.name " +
-            "from book as b " +
-            "join genre as g on (b.genre_id = g.id) " +
-            "join author as a on (b.author_id = a.id) " +
-            "where b.id =:id",
-        Map.of("id", id),
-        getBookRowMapper()
-    );
+    try {
+      return jdbc.queryForObject(
+          "select b.id, b.name, g.id, g.name, a.id, a.name " +
+              "from book as b " +
+              "join genre as g on (b.genre_id = g.id) " +
+              "join author as a on (b.author_id = a.id) " +
+              "where b.id =:id",
+          Map.of("id", id),
+          getBookRowMapper()
+      );
+    } catch (EmptyResultDataAccessException exception) {
+      return null;
+    }
   }
 
   private RowMapper<Book> getBookRowMapper() {
@@ -71,7 +75,7 @@ public class BookDaoJdbc implements BookDao {
         "update book set name = :name, author_id = :author_id, genre_id = :genre_id where id = :id",
         Map.of(
             "name", book.getName(),
-            "id", book.getId(),
+            "id", id,
             "author_id", book.getAuthor().getId(),
             "genre_id", book.getGenre().getId()
         )

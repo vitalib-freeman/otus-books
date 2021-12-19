@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.EmptyResultDataAccessException;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Genre;
@@ -12,6 +13,7 @@ import ru.vitalib.otus.homework.books.domain.Genre;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 @Import(BookDaoJdbc.class)
@@ -21,6 +23,7 @@ class BookDaoJdbcTest {
   public static final Author EXISTING_AUTHOR = new Author(1, "Веллер Михаил");
   public static final Genre EXISTING_GENRE = new Genre(1, "Детектив");
   public static final Book EXISTING_BOOK = new Book(1, "Хочу быть дворником", EXISTING_GENRE, EXISTING_AUTHOR);
+  public static final int NON_EXISTING_BOOK_ID = 10000;
 
   @Autowired
   private BookDaoJdbc dao;
@@ -74,7 +77,14 @@ class BookDaoJdbcTest {
     long savedBookId = dao.save(book);
 
     assertThat(dao.findById(savedBookId))
-        .usingRecursiveComparison()
-        .isEqualTo(book);
+        .extracting("name")
+        .isEqualTo("Толстой Лев");
   }
+
+  @Test
+  @DisplayName("Find for non-existing book should return")
+  public void getNonExistentBook() {
+    assertThat(dao.findById(NON_EXISTING_BOOK_ID)).isEqualTo(null);
+  }
+
 }

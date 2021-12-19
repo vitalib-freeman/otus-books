@@ -1,6 +1,7 @@
 package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,11 +19,15 @@ public class AuthorDaoJdbc implements AuthorDao {
 
   @Override
   public Author findByName(String authorName) {
-    return jdbc.queryForObject(
-        "select id, name from author where name =:name",
-        Map.of("name", authorName),
-        (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
-    );
+    try {
+      return jdbc.queryForObject(
+          "select id, name from author where name =:name",
+          Map.of("name", authorName),
+          (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
+      );
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
   }
 
   @Override
@@ -39,11 +44,15 @@ public class AuthorDaoJdbc implements AuthorDao {
 
   @Override
   public Author findById(long id) {
-    return jdbc.queryForObject(
-        "select id, name from author where id =:id",
-        Map.of("id", id),
-        (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
-    );
+    try {
+      return jdbc.queryForObject(
+          "select id, name from author where id =:id",
+          Map.of("id", id),
+          (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
+      );
+    } catch (EmptyResultDataAccessException exception) {
+      return null;
+    }
   }
 
   @Override
