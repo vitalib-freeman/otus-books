@@ -10,14 +10,10 @@ import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Genre;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @AllArgsConstructor
 public class SimpleBookService implements BookService {
-  private static final AtomicLong booksIds = new AtomicLong();
-  private static final AtomicLong authorIds = new AtomicLong();
-  private static final AtomicLong genreIds = new AtomicLong();
   private final BookDao bookDao;
   private final AuthorDao authorDao;
   private final GenreDao genreDao;
@@ -26,19 +22,16 @@ public class SimpleBookService implements BookService {
   public Long createBook(String title, String authorName, String genreName) {
     Author author = authorDao.findByName(authorName);
     if (author == null) {
-      author = new Author(authorIds.getAndDecrement(), authorName);
+      author = new Author(authorName);
       authorDao.save(author);
     }
     Genre genre = genreDao.findByName(genreName);
     if (genre == null) {
-      genre = new Genre(genreIds.getAndDecrement(), genreName);
+      genre = new Genre(genreName);
       genreDao.save(genre);
     }
-    long newBookId = booksIds.getAndDecrement();
-    Book book = new Book(newBookId, title, genre, author);
-
-    bookDao.save(book);
-    return newBookId;
+    Book book = new Book(title, genre, author);
+    return bookDao.save(book);
   }
 
   @Override

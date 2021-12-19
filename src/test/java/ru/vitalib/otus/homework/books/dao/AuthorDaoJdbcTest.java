@@ -37,9 +37,13 @@ class AuthorDaoJdbcTest {
   @Test
   @DisplayName("Delete author")
   void delete() {
-    dao.delete(EXISTING_AUTHOR.getId());
+    Author newAuthor = new Author(2, "New author");
+    dao.save(newAuthor);
+    assertThat(dao.count()).isEqualTo(EXISTING_AUTHORS_COUNT + 1);
 
-    assertThat(dao.count()).isEqualTo(EXISTING_AUTHORS_COUNT - 1);
+    dao.delete(newAuthor.getId());
+
+    assertThat(dao.count()).isEqualTo(EXISTING_AUTHORS_COUNT);
   }
 
   @Test
@@ -65,13 +69,13 @@ class AuthorDaoJdbcTest {
   @Test
   @DisplayName("Save author")
   void save() {
-    Author author = new Author(2, "Толстой Лев");
+    Author author = new Author("Толстой Лев");
 
-    dao.save(author);
+    long savedAuthorId = dao.save(author);
 
-    assertThat(dao.findById(author.getId()))
-        .usingRecursiveComparison()
-        .isEqualTo(author);
+    assertThat(dao.findById(savedAuthorId))
+        .extracting("name")
+        .isEqualTo("Толстой Лев");
   }
 
   @Test

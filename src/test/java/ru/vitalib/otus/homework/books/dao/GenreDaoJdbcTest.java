@@ -39,9 +39,12 @@ class GenreDaoJdbcTest {
   @Test
   @DisplayName("Delete genre")
   void delete() {
-    dao.delete(EXISTING_GENRE.getId());
+    long genreForDeletion = dao.save(new Genre("Other genre"));
+    assertThat(dao.count()).isEqualTo(EXISTING_GENRES_COUNT+1);
 
-    assertThat(dao.count()).isEqualTo(EXISTING_GENRES_COUNT - 1);
+    dao.delete(genreForDeletion);
+
+    assertThat(dao.count()).isEqualTo(EXISTING_GENRES_COUNT);
   }
 
   @Test
@@ -67,12 +70,12 @@ class GenreDaoJdbcTest {
   @Test
   @DisplayName("Save genre")
   void save() {
-    Genre genre = new Genre(2, "Толстой Лев");
+    Genre genre = new Genre("Толстой Лев");
 
-    dao.save(genre);
+    long savedGenreId = dao.save(genre);
 
-    assertThat(dao.findById(genre.getId()))
-        .usingRecursiveComparison()
-        .isEqualTo(genre);
+    assertThat(dao.findById(savedGenreId))
+        .extracting("name")
+        .isEqualTo("Толстой Лев");
   }
 }

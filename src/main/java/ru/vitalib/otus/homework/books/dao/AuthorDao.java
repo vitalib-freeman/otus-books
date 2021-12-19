@@ -5,7 +5,7 @@ import ru.vitalib.otus.homework.books.domain.Author;
 import java.util.List;
 
 public interface AuthorDao {
-  void save(Author author);
+  long save(Author author);
 
   Author findById(long id);
 

@@ -69,11 +69,11 @@ class BookDaoJdbcTest {
   @Test
   @DisplayName("Save book")
   void save() {
-    Book book = new Book(2, "Толстой Лев", EXISTING_GENRE, EXISTING_AUTHOR);
+    Book book = new Book("Толстой Лев", EXISTING_GENRE, EXISTING_AUTHOR);
 
-    dao.save(book);
+    long savedBookId = dao.save(book);
 
-    assertThat(dao.findById(book.getId()))
+    assertThat(dao.findById(savedBookId))
         .usingRecursiveComparison()
         .isEqualTo(book);
   }

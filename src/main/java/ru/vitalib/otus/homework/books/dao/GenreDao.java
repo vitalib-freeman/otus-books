@@ -5,7 +5,7 @@ import ru.vitalib.otus.homework.books.domain.Genre;
 import java.util.List;
 
 public interface GenreDao {
-  void save(Genre author);
+  long save(Genre author);
 
   Genre findById(long id);
 

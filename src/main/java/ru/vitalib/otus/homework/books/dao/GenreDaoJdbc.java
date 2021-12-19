@@ -1,7 +1,10 @@
 package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Genre;
 
@@ -14,11 +17,15 @@ public class GenreDaoJdbc implements GenreDao {
   private final NamedParameterJdbcOperations jdbc;
 
   @Override
-  public void save(Genre genre) {
+  public long save(Genre genre) {
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    MapSqlParameterSource parameterSource = new MapSqlParameterSource(Map.of("name", genre.getName()));
     jdbc.update(
-        "insert into genre (id, name) values(:id, :name)",
-        Map.of("id", genre.getId(), "name", genre.getName())
+        "insert into genre (name) values(:name)",
+        parameterSource,
+        keyHolder
     );
+    return (long) keyHolder.getKey();
   }
 
   @Override

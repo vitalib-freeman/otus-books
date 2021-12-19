@@ -1,7 +1,10 @@
 package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Author;
 
@@ -23,11 +26,15 @@ public class AuthorDaoJdbc implements AuthorDao {
   }
 
   @Override
-  public void save(Author author) {
+  public long save(Author author) {
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    MapSqlParameterSource parameterSource = new MapSqlParameterSource(Map.of("name", author.getName()));
     jdbc.update(
-        "insert into author (id, name) values(:id, :name)",
-        Map.of("id", author.getId(), "name", author.getName())
+        "insert into author (name) values(:name)",
+        parameterSource,
+        keyHolder
     );
+    return (long) keyHolder.getKey();
   }
 
   @Override
