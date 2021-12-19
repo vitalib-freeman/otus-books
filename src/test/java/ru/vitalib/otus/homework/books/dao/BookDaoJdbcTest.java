@@ -49,7 +49,7 @@ class BookDaoJdbcTest {
   @Test
   @DisplayName("Update book name")
   void update() {
-    Book updatedBook = new Book(EXISTING_BOOK.getId(), "Пушкин Александр", null, null);
+    Book updatedBook = new Book(EXISTING_BOOK.getId(), "Паранойа", EXISTING_GENRE, EXISTING_AUTHOR);
 
     dao.update(EXISTING_BOOK.getId(), updatedBook);
 
@@ -69,7 +69,7 @@ class BookDaoJdbcTest {
   @Test
   @DisplayName("Save book")
   void save() {
-    Book book = new Book(2, "Толстой Лев", null, null);
+    Book book = new Book(2, "Толстой Лев", EXISTING_GENRE, EXISTING_AUTHOR);
 
     dao.save(book);
 

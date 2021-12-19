@@ -1,8 +1,11 @@
 package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
+import ru.vitalib.otus.homework.books.domain.Genre;
 
 import java.util.List;
 import java.util.Map;
@@ -14,18 +17,35 @@ public class BookDaoJdbc implements BookDao {
   @Override
   public void save(Book book) {
     jdbc.update(
-        "insert into book (id, name) values(:id, :name)",
-        Map.of("id", book.getId(), "name", book.getName())
+        "insert into book (id, name, genre_id, author_id) values(:id, :name, :genre_id, :author_id)",
+        Map.of(
+            "id", book.getId(),
+            "name", book.getName(),
+            "genre_id", book.getGenre().getId(),
+            "author_id", book.getAuthor().getId()
+        )
     );
   }
 
   @Override
   public Book findById(long id) {
     return jdbc.queryForObject(
-        "select id, name from book where id =:id",
+        "select b.id, b.name, g.id, g.name, a.id, a.name " +
+            "from book as b " +
+            "join genre as g on (b.genre_id = g.id) " +
+            "join author as a on (b.author_id = a.id) " +
+            "where b.id =:id",
         Map.of("id", id),
-        (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("name"), null, null)
+        getBookRowMapper()
     );
+  }
+
+  private RowMapper<Book> getBookRowMapper() {
+    return (rs, rowNum) -> {
+      Author author = new Author(rs.getLong("author.id"), rs.getString("author.name"));
+      Genre genre = new Genre(rs.getLong("genre.id"), rs.getString("genre.name"));
+      return new Book(rs.getLong("book.id"), rs.getString("book.name"), genre, author);
+    };
   }
 
   @Override
@@ -37,8 +57,13 @@ public class BookDaoJdbc implements BookDao {
   @Override
   public void update(long id, Book book) {
     jdbc.update(
-        "update book set name = :name where id = :id",
-        Map.of("name", book.getName(), "id", book.getId())
+        "update book set name = :name, author_id = :author_id, genre_id = :genre_id where id = :id",
+        Map.of(
+            "name", book.getName(),
+            "id", book.getId(),
+            "author_id", book.getAuthor().getId(),
+            "genre_id", book.getGenre().getId()
+        )
     );
   }
 
@@ -51,8 +76,12 @@ public class BookDaoJdbc implements BookDao {
   @Override
   public List<Book> findAll() {
     return jdbc.query(
-        "select id, name from book",
-        (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("name"), null, null)
+        "select b.id, b.name, g.id, g.name, a.id, a.name " +
+            "from book as b " +
+            "join genre as g on (b.genre_id = g.id) " +
+            "join author as a on (b.author_id = a.id)",
+        Map.of(),
+        getBookRowMapper()
     );
   }
 }
