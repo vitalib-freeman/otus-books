@@ -16,4 +16,6 @@ public interface GenreDao {
   int count();
 
   List<Genre> findAll();
+
+  Genre findByName(String genreName);
 }

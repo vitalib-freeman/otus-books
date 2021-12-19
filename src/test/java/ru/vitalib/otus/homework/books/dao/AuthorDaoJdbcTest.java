@@ -73,4 +73,10 @@ class AuthorDaoJdbcTest {
         .usingRecursiveComparison()
         .isEqualTo(author);
   }
+
+  @Test
+  void findByName() {
+    assertThat(dao.findByName("Веллер Михаил"))
+        .isEqualTo(EXISTING_AUTHOR);
+  }
 }

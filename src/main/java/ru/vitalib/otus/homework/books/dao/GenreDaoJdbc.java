@@ -2,11 +2,13 @@ package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Genre;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 @AllArgsConstructor
 public class GenreDaoJdbc implements GenreDao {
   private final NamedParameterJdbcOperations jdbc;
@@ -54,6 +56,11 @@ public class GenreDaoJdbc implements GenreDao {
         "select id, name from genre",
         (rs, rowNum) -> new Genre(rs.getLong("id"), rs.getString("name"))
     );
+  }
+
+  @Override
+  public Genre findByName(String genreName) {
+    return null;
   }
 
 }

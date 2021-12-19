@@ -3,6 +3,7 @@ package ru.vitalib.otus.homework.books.dao;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Genre;
@@ -10,6 +11,7 @@ import ru.vitalib.otus.homework.books.domain.Genre;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 @AllArgsConstructor
 public class BookDaoJdbc implements BookDao {
   private final NamedParameterJdbcOperations jdbc;

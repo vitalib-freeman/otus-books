@@ -16,4 +16,6 @@ public interface AuthorDao {
   int count();
 
   List<Author> findAll();
+
+  Author findByName(String authorName);
 }
