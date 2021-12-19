@@ -1,0 +1,78 @@
+package ru.vitalib.otus.homework.books.dao;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
+import ru.vitalib.otus.homework.books.domain.Author;
+import ru.vitalib.otus.homework.books.domain.Genre;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DisplayName("GenreDao test")
+@JdbcTest
+@Import(GenreDaoJdbc.class)
+class GenreDaoJdbcTest {
+
+  public static final int EXISTING_GENRES_COUNT = 1;
+  public static final Genre EXISTING_GENRE = new Genre(1, "Детектив");
+
+  @Autowired
+  private GenreDaoJdbc dao;
+
+  @Test
+  @DisplayName("Find genre by id")
+  void findById() {
+    assertThat(dao.findById(1)).usingRecursiveComparison()
+        .isEqualTo(EXISTING_GENRE);
+  }
+
+  @Test
+  @DisplayName("Get genre's count")
+  void getCount() {
+    assertThat(dao.count()).isEqualTo(EXISTING_GENRES_COUNT);
+  }
+
+  @Test
+  @DisplayName("Delete genre")
+  void delete() {
+    dao.delete(EXISTING_GENRE.getId());
+
+    assertThat(dao.count()).isEqualTo(EXISTING_GENRES_COUNT - 1);
+  }
+
+  @Test
+  @DisplayName("Update genre name")
+  void update() {
+    Genre updatedGenre = new Genre(EXISTING_GENRE.getId(), "Пушкин Александр");
+
+    dao.update(EXISTING_GENRE.getId(), updatedGenre);
+
+    assertThat(dao.findById(EXISTING_GENRE.getId()))
+        .usingRecursiveComparison()
+        .isEqualTo(updatedGenre);
+  }
+
+  @Test
+  @DisplayName("Get all genres")
+  void getAll() {
+    assertThat(dao.findAll())
+        .usingRecursiveComparison()
+        .isEqualTo(List.of(EXISTING_GENRE));
+  }
+
+  @Test
+  @DisplayName("Save genre")
+  void save() {
+    Genre genre = new Genre(2, "Толстой Лев");
+
+    dao.save(genre);
+
+    assertThat(dao.findById(genre.getId()))
+        .usingRecursiveComparison()
+        .isEqualTo(genre);
+  }
+}
