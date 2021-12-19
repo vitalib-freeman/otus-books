@@ -24,7 +24,7 @@ public class BookDaoJdbc implements BookDao {
     return jdbc.queryForObject(
         "select id, name from book where id =:id",
         Map.of("id", id),
-        (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("name"))
+        (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("name"), null, null)
     );
   }
 
@@ -52,7 +52,7 @@ public class BookDaoJdbc implements BookDao {
   public List<Book> findAll() {
     return jdbc.query(
         "select id, name from book",
-        (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("name"))
+        (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("name"), null, null)
     );
   }
 }

@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
+import ru.vitalib.otus.homework.books.domain.Genre;
 
 import java.util.List;
 
@@ -16,7 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookDaoJdbcTest {
 
   public static final int EXISTING_BOOKS_COUNT = 1;
-  public static final Book EXISTING_BOOK = new Book(1, "Хочу быть дворником");
+  public static final Author EXISTING_AUTHOR = new Author(1, "Веллер Михаил");
+  public static final Genre EXISTING_GENRE = new Genre(1, "Детектив");
+  public static final Book EXISTING_BOOK = new Book(1, "Хочу быть дворником", EXISTING_GENRE, EXISTING_AUTHOR);
 
   @Autowired
   private BookDaoJdbc dao;
@@ -45,7 +49,7 @@ class BookDaoJdbcTest {
   @Test
   @DisplayName("Update book name")
   void update() {
-    Book updatedBook = new Book(EXISTING_BOOK.getId(), "Пушкин Александр");
+    Book updatedBook = new Book(EXISTING_BOOK.getId(), "Пушкин Александр", null, null);
 
     dao.update(EXISTING_BOOK.getId(), updatedBook);
 
@@ -65,7 +69,7 @@ class BookDaoJdbcTest {
   @Test
   @DisplayName("Save book")
   void save() {
-    Book book = new Book(2, "Толстой Лев");
+    Book book = new Book(2, "Толстой Лев", null, null);
 
     dao.save(book);
 
