@@ -1,0 +1,1 @@
+INSERT INTO AUTHOR(id, `name`) values (1, 'Веллер Михаил');
