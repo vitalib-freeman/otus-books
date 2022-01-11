@@ -1,7 +1,7 @@
 package ru.vitalib.otus.homework.books.dao;
 
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +65,18 @@ class BookDaoJPATest {
   }
 
   @Test
-  @DisplayName("Get all books")
+  @DisplayName("Get all books with all information")
   void getAll() {
-    assertThat(bookDaoJPA.findAll())
+    SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
+        .unwrap(SessionFactory.class);
+    sessionFactory.getStatistics().setStatisticsEnabled(true);
+
+    assertThat(bookDaoJPA.findAll()).isNotNull().hasSize(1)
+        .allMatch(b -> !b.getName().equals(""))
+        .allMatch(b -> b.getAuthor() != null)
+        .allMatch(b -> b.getGenre() != null)
         .hasSize(1);
+    assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
   }
 
   @Test
@@ -90,5 +98,4 @@ class BookDaoJPATest {
   public void getNonExistentBook() {
     assertThat(em.find(Book.class, NON_EXISTING_BOOK_ID)).isEqualTo(null);
   }
-
 }
