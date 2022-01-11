@@ -24,7 +24,7 @@ public class SimpleBookService implements BookService {
     Author author = authorService.getAuthorByName(authorName);
     Genre genre = genreService.getGenreByName(genreName);
     Book book = new Book(title, genre, author);
-    return bookDao.save(book);
+    return bookDao.save(book).getId();
   }
 
   @Override

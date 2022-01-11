@@ -21,7 +21,7 @@ public class BookDaoJdbc implements BookDao {
   private final NamedParameterJdbcOperations jdbc;
 
   @Override
-  public long save(Book book) {
+  public Book save(Book book) {
     MapSqlParameterSource parameterSource = new MapSqlParameterSource(
         Map.of(
             "name", book.getName(),
@@ -35,7 +35,8 @@ public class BookDaoJdbc implements BookDao {
         parameterSource,
         keyHolder
     );
-    return (long) keyHolder.getKey();
+    book.setId((long) keyHolder.getKey());
+    return book;
   }
 
   @Override
@@ -84,8 +85,8 @@ public class BookDaoJdbc implements BookDao {
 
   @Override
   @SuppressWarnings("all")
-  public int count() {
-    return jdbc.queryForObject("select count(1) from book", Map.of(), Integer.class);
+  public long count() {
+    return jdbc.queryForObject("select count(1) from book", Map.of(), Long.class);
   }
 
   @Override

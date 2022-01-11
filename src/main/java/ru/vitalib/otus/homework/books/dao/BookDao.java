@@ -5,7 +5,7 @@ import ru.vitalib.otus.homework.books.domain.Book;
 import java.util.List;
 
 public interface BookDao {
-  long save(Book author);
+  Book save(Book author);
 
   Book findById(long id);
 
@@ -13,7 +13,7 @@ public interface BookDao {
 
   void update(long id, Book author);
 
-  int count();
+  long count();
 
   List<Book> findAll();
 }

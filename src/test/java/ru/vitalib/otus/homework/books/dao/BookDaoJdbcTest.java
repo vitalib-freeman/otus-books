@@ -74,9 +74,9 @@ class BookDaoJdbcTest {
   void save() {
     Book book = new Book("Толстой Лев", EXISTING_GENRE, EXISTING_AUTHOR);
 
-    long savedBookId = dao.save(book);
+    Book savedBook = dao.save(book);
 
-    assertThat(dao.findById(savedBookId))
+    assertThat(dao.findById(savedBook.getId()))
         .extracting("name")
         .isEqualTo("Толстой Лев");
   }
