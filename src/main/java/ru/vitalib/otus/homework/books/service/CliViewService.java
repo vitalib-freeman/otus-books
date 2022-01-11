@@ -1,13 +1,12 @@
 package ru.vitalib.otus.homework.books.service;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.vitalib.otus.homework.books.domain.Book;
+import ru.vitalib.otus.homework.books.dto.BookDto;
 import ru.vitalib.otus.homework.books.exception.AuthorNotFoundException;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
 import ru.vitalib.otus.homework.books.exception.GenreNotFoundException;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +30,7 @@ public class CliViewService implements ViewService {
 
   @Override
   public void viewAllBooks() {
-    List<Book> allBooks = bookService.getAllBooks();
+    List<BookDto> allBooks = bookService.getAllBooks();
     if (allBooks.isEmpty()) {
       System.out.println("No books found");
       return;
@@ -39,13 +38,13 @@ public class CliViewService implements ViewService {
     allBooks.forEach(this::printBook);
   }
 
-  private void printBook(Book book) {
+  private void printBook(BookDto bookDto) {
     System.out.println(
         String.format("Id: %d, Title: %s, Author: %s, Genre: %s",
-            book.getId(),
-            book.getName(),
-            book.getAuthor().getName(),
-            book.getGenre().getName()
+            bookDto.getId(),
+            bookDto.getName(),
+            bookDto.getAuthorDto().getName(),
+            bookDto.getGenreDto().getName()
         )
     );
   }

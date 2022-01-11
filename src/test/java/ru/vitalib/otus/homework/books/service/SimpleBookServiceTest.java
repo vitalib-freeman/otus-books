@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.vitalib.otus.homework.books.converter.BookConverter;
 import ru.vitalib.otus.homework.books.dao.BookDao;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Genre;
+import ru.vitalib.otus.homework.books.dto.BookDto;
 import ru.vitalib.otus.homework.books.exception.AuthorNotFoundException;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
 import ru.vitalib.otus.homework.books.exception.GenreNotFoundException;
@@ -24,11 +26,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Test book service")
-@SpringBootTest(classes = {SimpleBookService.class})
+@SpringBootTest(classes = {SimpleBookService.class, BookConverter.class})
 class SimpleBookServiceTest {
 
   @Autowired
   BookService bookService;
+
+  @Autowired
+  BookConverter bookConverter;
 
   @MockBean
   BookDao bookDao;
@@ -45,10 +50,11 @@ class SimpleBookServiceTest {
   @DisplayName("Get all books")
   void getAllBooks() {
     when(bookDao.findAll()).thenReturn(List.of(EXISTING_BOOK));
-    List<Book> allBooks = bookService.getAllBooks();
+    List<BookDto> allBooks = bookService.getAllBooks();
 
     assertThat(allBooks)
-        .containsAll(List.of(EXISTING_BOOK));
+        .hasSize(1)
+        .allMatch(b -> b.getName().equals(EXISTING_BOOK.getName()));
   }
 
   @Test

@@ -1,17 +1,18 @@
 package ru.vitalib.otus.homework.books.service;
 
+import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.vitalib.otus.homework.books.converter.BookConverter;
 import ru.vitalib.otus.homework.books.dao.BookDao;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Genre;
+import ru.vitalib.otus.homework.books.dto.BookDto;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
 import ru.vitalib.otus.homework.books.exception.NotFoundException;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class SimpleBookService implements BookService {
   private final BookDao bookDao;
   private final GenreService genreService;
   private final AuthorService authorService;
+  private final BookConverter bookConverter;
 
   @Override
   @Transactional
@@ -38,7 +40,10 @@ public class SimpleBookService implements BookService {
   @Override
   @Transactional
   public void updateBook(long id, String title, String authorName, String genreName) {
-    Book book = getBookById(id);
+    Book book = bookDao.findById(id);
+    if (book == null) {
+      throw new NotFoundException();
+    }
     Author author = authorService.getAuthorByName(authorName);
     Genre genre = genreService.getGenreByName(genreName);
     bookDao.update(book.getId(), new Book(title, genre, author));
@@ -46,13 +51,15 @@ public class SimpleBookService implements BookService {
 
   @Override
   @Transactional
-  public List<Book> getAllBooks() {
-    return bookDao.findAll();
+  public List<BookDto> getAllBooks() {
+    return bookConverter.convert(bookDao.findAll());
   }
 
   @Override
   @Transactional
-  public Book getBookById(long id) {
-    return Optional.ofNullable(bookDao.findById(id)).orElseThrow(BookNotFoundException::new);
+  public BookDto getBookById(long id) {
+    return Optional.ofNullable(bookDao.findById(id))
+        .map(bookConverter::convert)
+        .orElseThrow(BookNotFoundException::new);
   }
 }
