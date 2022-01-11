@@ -1,9 +1,8 @@
 package ru.vitalib.otus.homework.books.service;
 
 
-import ru.vitalib.otus.homework.books.domain.Book;
-
 import java.util.List;
+import ru.vitalib.otus.homework.books.domain.Book;
 
 public interface BookService {
   Long createBook(String title, String author, String genre);

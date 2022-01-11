@@ -48,6 +48,6 @@ public class BookDaoJPA implements BookDao {
 
   @Override
   public List<Book> findAll() {
-    return em.createQuery("select b from Book b", Book.class).getResultList();
+    return em.createQuery("select b from Book b join fetch b.author join fetch b.genre", Book.class).getResultList();
   }
 }

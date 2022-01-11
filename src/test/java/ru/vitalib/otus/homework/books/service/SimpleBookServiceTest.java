@@ -55,13 +55,13 @@ class SimpleBookServiceTest {
   void saveBookWithExistentGenreAndAuthor() {
     when(authorService.getAuthorByName(EXISTING_AUTHOR.getName())).thenReturn(EXISTING_AUTHOR);
     when(genreService.getGenreByName(EXISTING_GENRE.getName())).thenReturn(EXISTING_GENRE);
+    when(bookDao.save(any())).thenReturn(EXISTING_BOOK);
 
-    Long savedBookId = bookService.createBook("New Book Title", EXISTING_AUTHOR.getName(), EXISTING_GENRE.getName());
+    bookService.createBook("New Book Title", EXISTING_AUTHOR.getName(), EXISTING_GENRE.getName());
 
     verify(authorService).getAuthorByName(EXISTING_AUTHOR.getName());
     verify(genreService).getGenreByName(EXISTING_GENRE.getName());
     verify(bookDao).save(any());
-    assertThat(savedBookId).isNotEqualTo(EXISTING_BOOK.getId());
   }
 
   @Test
