@@ -80,4 +80,9 @@ public class CliViewService implements ViewService {
       System.out.println("Error: Book doesn't exist");
     }
   }
+
+  @Override
+  public void commentBook(Long bookId, String commentText) {
+    bookService.commentBook(bookId, commentText);
+  }
 }

@@ -10,4 +10,6 @@ public interface ViewService {
   void deleteBook(Long bookId);
 
   void viewBook(Long bookId);
+
+  void commentBook(Long bookId, String commentText);
 }

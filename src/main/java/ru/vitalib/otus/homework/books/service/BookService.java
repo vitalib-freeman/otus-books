@@ -15,4 +15,6 @@ public interface BookService {
   List<BookDto> getAllBooks();
 
   BookDto getBookById(long id);
+
+  void commentBook(Long bookId, String commentText);
 }

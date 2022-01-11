@@ -9,6 +9,7 @@ import ru.vitalib.otus.homework.books.converter.BookConverter;
 import ru.vitalib.otus.homework.books.dao.BookDao;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
+import ru.vitalib.otus.homework.books.domain.Comment;
 import ru.vitalib.otus.homework.books.domain.Genre;
 import ru.vitalib.otus.homework.books.dto.BookDto;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
@@ -61,5 +62,18 @@ public class SimpleBookService implements BookService {
     return Optional.ofNullable(bookDao.findById(id))
         .map(bookConverter::convert)
         .orElseThrow(BookNotFoundException::new);
+  }
+
+  @Override
+  @Transactional
+  public void commentBook(Long bookId, String commentText) {
+    Book book = bookDao.findById(bookId);
+    if (book == null) {
+      throw new NotFoundException();
+    }
+    Comment comment = new Comment();
+    comment.setBook(book);
+    comment.setText(commentText);
+    book.getComments().add(comment);
   }
 }
