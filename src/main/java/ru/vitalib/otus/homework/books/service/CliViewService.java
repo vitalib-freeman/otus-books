@@ -1,9 +1,11 @@
 package ru.vitalib.otus.homework.books.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vitalib.otus.homework.books.dto.BookDto;
+import ru.vitalib.otus.homework.books.dto.CommentDto;
 import ru.vitalib.otus.homework.books.exception.AuthorNotFoundException;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
 import ru.vitalib.otus.homework.books.exception.GenreNotFoundException;
@@ -40,11 +42,12 @@ public class CliViewService implements ViewService {
 
   private void printBook(BookDto bookDto) {
     System.out.println(
-        String.format("Id: %d, Title: %s, Author: %s, Genre: %s",
+        String.format("Id: %d, Title: %s, Author: %s, Genre: %s, Comments: %s",
             bookDto.getId(),
             bookDto.getName(),
             bookDto.getAuthorDto().getName(),
-            bookDto.getGenreDto().getName()
+            bookDto.getGenreDto().getName(),
+            bookDto.getComments().stream().map(CommentDto::getText).collect(Collectors.joining(", "))
         )
     );
   }

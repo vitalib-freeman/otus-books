@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
+import ru.vitalib.otus.homework.books.domain.Comment;
 import ru.vitalib.otus.homework.books.domain.Genre;
 import ru.vitalib.otus.homework.books.dto.AuthorDto;
 import ru.vitalib.otus.homework.books.dto.BookDto;
+import ru.vitalib.otus.homework.books.dto.CommentDto;
 import ru.vitalib.otus.homework.books.dto.GenreDto;
 
 @Component
@@ -23,7 +25,20 @@ public class BookConverter {
         .setAuthorDto(convert(book.getAuthor()))
         .setGenreDto(convert(book.getGenre()))
         .setId(book.getId())
-        .setName(book.getName());
+        .setName(book.getName())
+        .setComments(convertComments(book.getComments()));
+  }
+
+  private List<CommentDto> convertComments(List<Comment> comments) {
+    return comments.stream()
+        .map(this::convertComment)
+        .collect(Collectors.toList());
+  }
+
+  private CommentDto convertComment(Comment comment) {
+    return new CommentDto()
+        .setId(comment.getId())
+        .setText(comment.getText());
   }
 
   private GenreDto convert(Genre genre) {

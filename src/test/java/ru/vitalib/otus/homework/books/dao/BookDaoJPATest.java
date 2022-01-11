@@ -22,6 +22,7 @@ class BookDaoJPATest {
   public static final Book EXISTING_BOOK = new Book(1, "Хочу быть дворником", EXISTING_GENRE, EXISTING_AUTHOR);
   public static final long NON_EXISTING_BOOK_ID = 10000L;
   private static final int EXISTING_BOOK_ID = 1;
+  private static final String EXISTING_COMMENT_TEXT = "Норм";
 
   @Autowired
   private TestEntityManager em;
@@ -35,8 +36,9 @@ class BookDaoJPATest {
     assertThat(bookDaoJPA.findById(EXISTING_BOOK_ID))
         .isNotNull()
         .matches(b -> b.getName().equals("Хочу быть дворником"))
-        .matches(b -> b.getAuthor() != null && b.getAuthor().getName().equals("Веллер Михаил"))
-        .matches(b -> b.getGenre() != null && b.getGenre().getName().equals("Детектив"));
+        .matches(b -> b.getAuthor().getName().equals("Веллер Михаил"))
+        .matches(b -> b.getGenre().getName().equals("Детектив"))
+        .matches(b -> b.getComments().iterator().next().getText().equals(EXISTING_COMMENT_TEXT));
   }
 
   @Test
