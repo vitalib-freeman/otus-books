@@ -48,9 +48,12 @@ class BookDaoJPATest {
   @Test
   @DisplayName("Delete book")
   void delete() {
-    bookDaoJPA.delete(EXISTING_BOOK.getId());
+    Book forDeletion = bookDaoJPA.save(new Book("new", EXISTING_GENRE, EXISTING_AUTHOR));
+    assertThat(bookDaoJPA.count()).isEqualTo(EXISTING_BOOKS_COUNT + 1);
 
-    assertThat(bookDaoJPA.count()).isEqualTo(EXISTING_BOOKS_COUNT - 1);
+    bookDaoJPA.delete(forDeletion.getId());
+
+    assertThat(bookDaoJPA.count()).isEqualTo(EXISTING_BOOKS_COUNT);
   }
 
   @Test
@@ -75,8 +78,9 @@ class BookDaoJPATest {
         .allMatch(b -> !b.getName().equals(""))
         .allMatch(b -> b.getAuthor() != null)
         .allMatch(b -> b.getGenre() != null)
+        .allMatch(b -> b.getComments().size() > 0)
         .hasSize(1);
-    assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
+    assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(2);
   }
 
   @Test

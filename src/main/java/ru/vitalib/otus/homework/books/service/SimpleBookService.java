@@ -1,5 +1,6 @@
 package ru.vitalib.otus.homework.books.service;
 
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vitalib.otus.homework.books.dao.BookDao;
@@ -20,6 +21,7 @@ public class SimpleBookService implements BookService {
   private final AuthorService authorService;
 
   @Override
+  @Transactional
   public Long createBook(String title, String authorName, String genreName) {
     Author author = authorService.getAuthorByName(authorName);
     Genre genre = genreService.getGenreByName(genreName);
@@ -28,11 +30,13 @@ public class SimpleBookService implements BookService {
   }
 
   @Override
+  @Transactional
   public void deleteBook(long id) {
     bookDao.delete(id);
   }
 
   @Override
+  @Transactional
   public void updateBook(long id, String title, String authorName, String genreName) {
     Book book = getBookById(id);
     Author author = authorService.getAuthorByName(authorName);
@@ -41,11 +45,13 @@ public class SimpleBookService implements BookService {
   }
 
   @Override
+  @Transactional
   public List<Book> getAllBooks() {
     return bookDao.findAll();
   }
 
   @Override
+  @Transactional
   public Book getBookById(long id) {
     return Optional.ofNullable(bookDao.findById(id)).orElseThrow(BookNotFoundException::new);
   }
