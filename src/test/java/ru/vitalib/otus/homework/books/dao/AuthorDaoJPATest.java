@@ -1,4 +1,4 @@
-package ru.vitalib.otus.homework.books.repositories;
+package ru.vitalib.otus.homework.books.dao;
 
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,17 +11,15 @@ import org.springframework.context.annotation.Import;
 import ru.vitalib.otus.homework.books.domain.Author;
 
 @DataJpaTest
-@Import(AuthorRepositoryJPA.class)
-class AuthorRepositoryJPATest {
-
-  @Autowired
-  private TestEntityManager em;
+@Import(AuthorDaoJPA.class)
+class AuthorDaoJPATest {
 
   public static final int EXISTING_AUTHORS_COUNT = 1;
   public static final Author EXISTING_AUTHOR = new Author(1, "Веллер Михаил");
-
   @Autowired
-  private AuthorRepositoryJPA authorRepositoryJPA;
+  private TestEntityManager em;
+  @Autowired
+  private AuthorDaoJPA authorRepositoryJPA;
 
   @Test
   @DisplayName("Find author by id")

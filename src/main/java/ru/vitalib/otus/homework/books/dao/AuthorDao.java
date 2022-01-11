@@ -1,9 +1,9 @@
-package ru.vitalib.otus.homework.books.repositories;
+package ru.vitalib.otus.homework.books.dao;
 
 import java.util.List;
 import ru.vitalib.otus.homework.books.domain.Author;
 
-public interface AuthorRepository {
+public interface AuthorDao {
   Author save(Author author);
 
   Author findById(long id);

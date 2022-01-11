@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.vitalib.otus.homework.books.domain.Genre;
-import ru.vitalib.otus.homework.books.repositories.GenreRepository;
+import ru.vitalib.otus.homework.books.dao.GenreDao;
 
 @SpringBootTest(classes = {SimpleGenreService.class})
 @DisplayName("Test simple genre service")
@@ -18,12 +18,12 @@ class SimpleGenreServiceTest {
   private SimpleGenreService genreService;
 
   @MockBean
-  private GenreRepository genreRepository;
+  private GenreDao genreDao;
 
   @Test
   @DisplayName("Test fetching genre by name")
   public void getGenreByName() {
-    when(genreRepository.findByName("Genre")).thenReturn(new Genre("Genre"));
+    when(genreDao.findByName("Genre")).thenReturn(new Genre("Genre"));
 
     Genre genre = genreService.getGenreByName("Genre");
 

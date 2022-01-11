@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.vitalib.otus.homework.books.domain.Author;
-import ru.vitalib.otus.homework.books.repositories.AuthorRepository;
+import ru.vitalib.otus.homework.books.dao.AuthorDao;
 
 @DisplayName("Test author service")
 @SpringBootTest(classes = {SimpleAuthorService.class})
@@ -19,12 +19,12 @@ class SimpleAuthorServiceTest {
   AuthorService authorService;
 
   @MockBean
-  AuthorRepository authorRepository;
+  AuthorDao authorDao;
 
   @Test
   @DisplayName("Test can get author by name")
   public void getAuthorByName() {
-    when(authorRepository.findByName("Author")).thenReturn(new Author("Author"));
+    when(authorDao.findByName("Author")).thenReturn(new Author("Author"));
 
     Author author = authorService.getAuthorByName(AUTHOR);
 
