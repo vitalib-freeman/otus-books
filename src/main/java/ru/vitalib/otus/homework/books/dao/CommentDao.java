@@ -4,6 +4,6 @@ import ru.vitalib.otus.homework.books.domain.Comment;
 
 public interface CommentDao {
   Comment save(Comment comment);
-  void delete(Long id);
+  void delete(Comment comment);
   Comment findById(Long id);
 }

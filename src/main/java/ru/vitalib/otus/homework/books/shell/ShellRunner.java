@@ -35,8 +35,14 @@ public class ShellRunner {
     viewService.viewBook(bookId);
   }
 
-  @ShellMethod(value = "Add comment", key={"comment_book", "cb"})
+  @ShellMethod(value = "Add comment", key = {"comment_book", "cb"})
   public void commentBook(Long bookId, String commentText) {
-    viewService.commentBook(bookId, commentText);
+    viewService.addCommentToBook(bookId, commentText);
   }
+
+  @ShellMethod(value = "Get comments for book", key = {"book_comments", "bc"})
+  public void getCommentsForBook(Long bookId) {
+    viewService.getBookComments(bookId);
+  }
+
 }

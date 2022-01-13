@@ -8,7 +8,7 @@ public interface AuthorDao {
 
   Author findById(long id);
 
-  void delete(long id);
+  void delete(Author author);
 
   long count();
 

@@ -29,7 +29,7 @@ public class BookConverter {
         .setComments(convertComments(book.getComments()));
   }
 
-  private List<CommentDto> convertComments(List<Comment> comments) {
+  public List<CommentDto> convertComments(List<Comment> comments) {
     return comments.stream()
         .map(this::convertComment)
         .collect(Collectors.toList());

@@ -37,11 +37,10 @@ class AuthorDaoJPATest {
   @Test
   @DisplayName("Delete author")
   void delete() {
-    Author newAuthor = new Author(2, "New author");
-    authorRepositoryJPA.save(newAuthor);
+    Author newAuthor = authorRepositoryJPA.save(new Author(2, "New author"));
     assertThat(authorRepositoryJPA.count()).isEqualTo(EXISTING_AUTHORS_COUNT + 1);
 
-    authorRepositoryJPA.delete(newAuthor.getId());
+    authorRepositoryJPA.delete(newAuthor);
 
     assertThat(authorRepositoryJPA.count()).isEqualTo(EXISTING_AUTHORS_COUNT);
   }

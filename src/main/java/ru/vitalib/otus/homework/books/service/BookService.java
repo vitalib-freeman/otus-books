@@ -2,7 +2,6 @@ package ru.vitalib.otus.homework.books.service;
 
 
 import java.util.List;
-import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.dto.BookDto;
 
 public interface BookService {
@@ -16,5 +15,5 @@ public interface BookService {
 
   BookDto getBookById(long id);
 
-  void commentBook(Long bookId, String commentText);
+  void addCommentToBook(Long bookId, String commentText);
 }

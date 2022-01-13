@@ -11,5 +11,7 @@ public interface ViewService {
 
   void viewBook(Long bookId);
 
-  void commentBook(Long bookId, String commentText);
+  void addCommentToBook(Long bookId, String commentText);
+
+  void getBookComments(Long bookId);
 }

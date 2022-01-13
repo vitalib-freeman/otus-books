@@ -66,7 +66,7 @@ public class SimpleBookService implements BookService {
 
   @Override
   @Transactional
-  public void commentBook(Long bookId, String commentText) {
+  public void addCommentToBook(Long bookId, String commentText) {
     Book book = bookDao.findById(bookId);
     if (book == null) {
       throw new NotFoundException();

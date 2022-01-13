@@ -3,9 +3,7 @@ package ru.vitalib.otus.homework.books.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Author;
 
@@ -18,7 +16,6 @@ public class AuthorDaoJPA implements AuthorDao {
     this.em = em;
   }
 
-  @Transactional
   @Override
   public Author save(Author author) {
     if (author.getId() == 0) {
@@ -34,10 +31,8 @@ public class AuthorDaoJPA implements AuthorDao {
   }
 
   @Override
-  public void delete(long id) {
-    Query query = em.createQuery("delete from Author a where a.id = :id");
-    query.setParameter("id", id);
-    query.executeUpdate();
+  public void delete(Author author) {
+    em.remove(author);
   }
 
   @Override

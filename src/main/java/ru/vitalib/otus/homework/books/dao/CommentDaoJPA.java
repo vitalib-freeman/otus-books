@@ -14,12 +14,16 @@ public class CommentDaoJPA implements CommentDao {
 
   @Override
   public Comment save(Comment comment) {
-    return null;
+    if (comment.getId() == 0) {
+      em.persist(comment);
+      return comment;
+    }
+    return em.merge(comment);
   }
 
   @Override
-  public void delete(Long id) {
-
+  public void delete(Comment comment) {
+    em.remove(comment);
   }
 
   @Override

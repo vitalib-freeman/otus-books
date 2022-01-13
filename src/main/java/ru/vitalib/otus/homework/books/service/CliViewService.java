@@ -13,7 +13,9 @@ import ru.vitalib.otus.homework.books.exception.GenreNotFoundException;
 @Service
 @AllArgsConstructor
 public class CliViewService implements ViewService {
-  public final BookService bookService;
+  private final BookService bookService;
+  private final CommentService commentService;
+
 
   @Override
   public void createBook(String bookName, String authorName, String genreName) {
@@ -82,7 +84,19 @@ public class CliViewService implements ViewService {
   }
 
   @Override
-  public void commentBook(Long bookId, String commentText) {
-    bookService.commentBook(bookId, commentText);
+  public void addCommentToBook(Long bookId, String commentText) {
+    bookService.addCommentToBook(bookId, commentText);
+  }
+
+  @Override
+  public void getBookComments(Long bookId) {
+    try {
+      System.out.println(
+          commentService.getCommentsForBook(bookId).stream()
+              .map(CommentDto::getText)
+              .collect(Collectors.joining(", ")));
+    } catch (BookNotFoundException ex) {
+      System.out.println("Error: Book doesn't exist");
+    }
   }
 }

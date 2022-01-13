@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Comment;
 
 @DataJpaTest
@@ -29,4 +30,29 @@ class CommentDaoJPATest {
   }
 
 
+  @Test
+  @DisplayName("Save comment")
+  void save() {
+    Comment comment = commentDaoJPA.save(new Comment(0L, "comment", null));
+
+    assertThat(comment.getId()).isNotEqualTo(0L);
+  }
+
+  @Test
+  void delete() {
+    Comment comment = em.persist(new Comment(0L, "comment", null));
+
+    commentDaoJPA.delete(comment);
+
+    assertThat(em.find(Comment.class, comment.getId()))
+        .isEqualTo(null);
+  }
+
+  @Test
+  void findById() {
+    Comment comment = em.persist(new Comment(0L, "comment", null));
+
+    assertThat(commentDaoJPA.findById(comment.getId()))
+        .isNotNull();
+  }
 }
