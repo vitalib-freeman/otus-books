@@ -34,16 +34,13 @@ public class SimpleBookService implements BookService {
   @Override
   @Transactional
   public void deleteBook(long id) {
-    bookDao.deleteById(id);
+    bookDao.findById(id).ifPresent(bookDao::delete);
   }
 
   @Override
   @Transactional
   public void updateBook(long id, String title, String authorName, String genreName) {
-    Book book = bookDao.findById(id).get();
-    if (book == null) {
-      throw new NotFoundException();
-    }
+    Book book = bookDao.findById(id).orElseThrow(NotFoundException::new);
     Author author = authorService.getAuthorByName(authorName);
     Genre genre = genreService.getGenreByName(genreName);
     book.setGenre(genre);

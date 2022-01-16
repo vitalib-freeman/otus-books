@@ -1,6 +1,7 @@
 package ru.vitalib.otus.homework.books.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +31,7 @@ class CommentServiceTest {
 
   @Test
   void getCommentsForBook() {
-    when(bookDao.findById(1L).get()).thenReturn(getBook());
+    when(bookDao.findById(1L)).thenReturn(getBook());
     when(bookConverter.convertComments(any())).thenReturn(List.of());
 
     commentService.getCommentsForBook(1L);
@@ -39,9 +40,9 @@ class CommentServiceTest {
     verify(bookConverter).convertComments(any());
   }
 
-  private Book getBook() {
+  private Optional<Book> getBook() {
     Book book = new Book();
     book.setComments(List.of(new Comment()));
-    return book;
+    return Optional.of(book);
   }
 }
