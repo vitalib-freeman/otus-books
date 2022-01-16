@@ -1,7 +1,6 @@
 package ru.vitalib.otus.homework.books.service;
 
 import java.util.List;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,19 +34,18 @@ public class SimpleBookService implements BookService {
   @Override
   @Transactional
   public void deleteBook(long id) {
-    bookDao.delete(id);
+    bookDao.findById(id).ifPresent(bookDao::delete);
   }
 
   @Override
   @Transactional
   public void updateBook(long id, String title, String authorName, String genreName) {
-    Book book = bookDao.findById(id);
-    if (book == null) {
-      throw new NotFoundException();
-    }
+    Book book = bookDao.findById(id).orElseThrow(NotFoundException::new);
     Author author = authorService.getAuthorByName(authorName);
     Genre genre = genreService.getGenreByName(genreName);
-    bookDao.update(book.getId(), new Book(title, genre, author));
+    book.setGenre(genre);
+    book.setAuthor(author);
+    bookDao.save(book);
   }
 
   @Override
@@ -59,18 +57,13 @@ public class SimpleBookService implements BookService {
   @Override
   @Transactional
   public BookDto getBookById(long id) {
-    return Optional.ofNullable(bookDao.findById(id))
-        .map(bookConverter::convert)
-        .orElseThrow(BookNotFoundException::new);
+    return bookDao.findById(id).map(bookConverter::convert).orElseThrow(BookNotFoundException::new);
   }
 
   @Override
   @Transactional
   public void addCommentToBook(Long bookId, String commentText) {
-    Book book = bookDao.findById(bookId);
-    if (book == null) {
-      throw new NotFoundException();
-    }
+    Book book = bookDao.findById(bookId).orElseThrow(NotFoundException::new);
     Comment comment = new Comment();
     comment.setBook(book);
     comment.setText(commentText);

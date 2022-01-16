@@ -1,7 +1,14 @@
 package ru.vitalib.otus.homework.books.service;
 
+import java.util.List;
+import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,35 +23,23 @@ import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
 import ru.vitalib.otus.homework.books.exception.GenreNotFoundException;
 import ru.vitalib.otus.homework.books.exception.NotFoundException;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @DisplayName("Test book service")
 @SpringBootTest(classes = {SimpleBookService.class, BookConverter.class})
 class SimpleBookServiceTest {
 
+  public static final Author EXISTING_AUTHOR = new Author(1, "Веллер Михаил");
+  public static final Genre EXISTING_GENRE = new Genre(1, "Детектив");
+  public static final Book EXISTING_BOOK = new Book(1, "Хочу быть дворником", EXISTING_GENRE, EXISTING_AUTHOR);
   @Autowired
   BookService bookService;
-
   @Autowired
   BookConverter bookConverter;
-
   @MockBean
   BookDao bookDao;
   @MockBean
   AuthorService authorService;
   @MockBean
   GenreService genreService;
-
-  public static final Author EXISTING_AUTHOR = new Author(1, "Веллер Михаил");
-  public static final Genre EXISTING_GENRE = new Genre(1, "Детектив");
-  public static final Book EXISTING_BOOK = new Book(1, "Хочу быть дворником", EXISTING_GENRE, EXISTING_AUTHOR);
 
   @Test
   @DisplayName("Get all books")
@@ -91,7 +86,7 @@ class SimpleBookServiceTest {
   @Test
   @DisplayName("Update book")
   void updateBookWithExistentGenreAndAuthor() {
-    when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(EXISTING_BOOK);
+    when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(Optional.of(EXISTING_BOOK));
     when(authorService.getAuthorByName(EXISTING_AUTHOR.getName())).thenReturn(EXISTING_AUTHOR);
     when(genreService.getGenreByName(EXISTING_GENRE.getName())).thenReturn(EXISTING_GENRE);
 
@@ -100,13 +95,13 @@ class SimpleBookServiceTest {
     verify(bookDao).findById(EXISTING_BOOK.getId());
     verify(authorService).getAuthorByName(EXISTING_AUTHOR.getName());
     verify(genreService).getGenreByName(EXISTING_GENRE.getName());
-    verify(bookDao).update(eq(EXISTING_BOOK.getId()), any());
+    verify(bookDao).save(any());
   }
 
   @Test
   @DisplayName("Update non-existent book throw error")
   void updateNonExistentBook() {
-    when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(null);
+    when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> bookService.updateBook(EXISTING_BOOK.getId(), "OtherTitle", EXISTING_AUTHOR.getName(), EXISTING_GENRE.getName()))
         .isInstanceOf(NotFoundException.class);
@@ -115,9 +110,11 @@ class SimpleBookServiceTest {
   @Test
   @DisplayName("Delete book")
   void deleteBook() {
+    when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(Optional.of(EXISTING_BOOK));
+
     bookService.deleteBook(EXISTING_BOOK.getId());
 
-    verify(bookDao).delete(EXISTING_BOOK.getId());
+    verify(bookDao).delete(EXISTING_BOOK);
   }
 
   @Test

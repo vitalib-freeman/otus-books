@@ -1,6 +1,7 @@
 package ru.vitalib.otus.homework.books.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,12 +15,12 @@ import ru.vitalib.otus.homework.books.dao.BookDao;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Comment;
 
-@SpringBootTest(classes = {CommentService.class})
+@SpringBootTest(classes = {CommentServiceImpl.class})
 @DisplayName("Comments test")
 class CommentServiceTest {
 
   @Autowired
-  CommentService commentService;
+  CommentServiceImpl commentService;
 
   @MockBean
   BookDao bookDao;
@@ -39,9 +40,9 @@ class CommentServiceTest {
     verify(bookConverter).convertComments(any());
   }
 
-  private Book getBook() {
+  private Optional<Book> getBook() {
     Book book = new Book();
     book.setComments(List.of(new Comment()));
-    return book;
+    return Optional.of(book);
   }
 }

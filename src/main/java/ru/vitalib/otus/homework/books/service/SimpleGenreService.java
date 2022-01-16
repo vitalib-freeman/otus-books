@@ -15,6 +15,6 @@ public class SimpleGenreService implements GenreService {
 
   @Override
   public Genre getGenreByName(String genreName) {
-    return Optional.ofNullable(genreDao.findByName(genreName)).orElseThrow(GenreNotFoundException::new);
+    return genreDao.findByName(genreName).orElseThrow(GenreNotFoundException::new);
   }
 }
