@@ -30,7 +30,7 @@ class CommentServiceTest {
 
   @Test
   void getCommentsForBook() {
-    when(bookDao.findById(1L)).thenReturn(getBook());
+    when(bookDao.findById(1L).get()).thenReturn(getBook());
     when(bookConverter.convertComments(any())).thenReturn(List.of());
 
     commentService.getCommentsForBook(1L);

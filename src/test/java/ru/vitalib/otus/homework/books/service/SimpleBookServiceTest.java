@@ -91,7 +91,7 @@ class SimpleBookServiceTest {
   @Test
   @DisplayName("Update book")
   void updateBookWithExistentGenreAndAuthor() {
-    when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(EXISTING_BOOK);
+    when(bookDao.findById(EXISTING_BOOK.getId()).get()).thenReturn(EXISTING_BOOK);
     when(authorService.getAuthorByName(EXISTING_AUTHOR.getName())).thenReturn(EXISTING_AUTHOR);
     when(genreService.getGenreByName(EXISTING_GENRE.getName())).thenReturn(EXISTING_GENRE);
 
@@ -100,7 +100,7 @@ class SimpleBookServiceTest {
     verify(bookDao).findById(EXISTING_BOOK.getId());
     verify(authorService).getAuthorByName(EXISTING_AUTHOR.getName());
     verify(genreService).getGenreByName(EXISTING_GENRE.getName());
-    verify(bookDao).update(eq(EXISTING_BOOK.getId()), any());
+    verify(bookDao).save(any());
   }
 
   @Test
@@ -117,7 +117,7 @@ class SimpleBookServiceTest {
   void deleteBook() {
     bookService.deleteBook(EXISTING_BOOK.getId());
 
-    verify(bookDao).delete(EXISTING_BOOK.getId());
+    verify(bookDao).delete(EXISTING_BOOK);
   }
 
   @Test

@@ -1,7 +1,6 @@
 package ru.vitalib.otus.homework.books.service;
 
 import java.util.List;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Transactional
   public List<CommentDto> getCommentsForBook(Long bookId) {
-    return Optional.ofNullable(bookDao.findById(bookId))
+    return bookDao.findById(bookId)
         .map(book -> bookConverter.convertComments(book.getComments()))
         .orElseThrow(NotFoundException::new);
   }
