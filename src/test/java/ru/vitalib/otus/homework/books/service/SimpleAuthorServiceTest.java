@@ -1,5 +1,6 @@
 package ru.vitalib.otus.homework.books.service;
 
+import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class SimpleAuthorServiceTest {
   @Test
   @DisplayName("Test can get author by name")
   public void getAuthorByName() {
-    when(authorDao.findByName("Author")).thenReturn(new Author("Author"));
+    when(authorDao.findByName("Author")).thenReturn(Optional.of(new Author("Author")));
 
     Author author = authorService.getAuthorByName(AUTHOR);
 

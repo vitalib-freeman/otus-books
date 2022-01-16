@@ -1,11 +1,10 @@
 package ru.vitalib.otus.homework.books.service;
 
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.vitalib.otus.homework.books.dao.AuthorDao;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.exception.AuthorNotFoundException;
-import ru.vitalib.otus.homework.books.dao.AuthorDao;
 
 @Service
 @AllArgsConstructor
@@ -15,6 +14,6 @@ public class SimpleAuthorService implements AuthorService {
 
   @Override
   public Author getAuthorByName(String authorName) {
-    return Optional.ofNullable(authorDao.findByName(authorName)).orElseThrow(AuthorNotFoundException::new);
+    return authorDao.findByName(authorName).orElseThrow(AuthorNotFoundException::new);
   }
 }

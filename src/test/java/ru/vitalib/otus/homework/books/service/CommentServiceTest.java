@@ -14,12 +14,12 @@ import ru.vitalib.otus.homework.books.dao.BookDao;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Comment;
 
-@SpringBootTest(classes = {CommentService.class})
+@SpringBootTest(classes = {CommentServiceImpl.class})
 @DisplayName("Comments test")
 class CommentServiceTest {
 
   @Autowired
-  CommentService commentService;
+  CommentServiceImpl commentService;
 
   @MockBean
   BookDao bookDao;
