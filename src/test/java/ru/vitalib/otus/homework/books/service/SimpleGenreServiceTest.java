@@ -1,5 +1,6 @@
 package ru.vitalib.otus.homework.books.service;
 
+import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class SimpleGenreServiceTest {
   @Test
   @DisplayName("Test fetching genre by name")
   public void getGenreByName() {
-    when(genreDao.findByName("Genre")).thenReturn(new Genre("Genre"));
+    when(genreDao.findByName("Genre")).thenReturn(Optional.of(new Genre("Genre")));
 
     Genre genre = genreService.getGenreByName("Genre");
 
